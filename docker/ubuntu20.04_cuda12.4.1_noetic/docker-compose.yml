@@ -1,0 +1,24 @@
+services:
+  liobench:
+    image: liobench:ubuntu20.04_cuda12.4.1_noetic
+    container_name: liobench
+    volumes:
+      # Map host workspace to container workspace (Please change to your own path)      
+      - $HOME/liobench:/home/liobench/workspace/:rw
+      - $HOME/dataset:/home/liobench/dataset/:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw      
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - DISPLAY=$DISPLAY
+      - NVIDIA_VISIBLE_DEVICES=all
+      - LANG=C.UTF-8 # Fix garbled Chinese text
+      - LC_ALL=C.UTF-8
+    tty: true
+    stdin_open: true
+    restart: 'no'
